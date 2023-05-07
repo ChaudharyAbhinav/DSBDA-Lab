@@ -1,0 +1,181 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2580
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica-Bold;\f1\fswiss\fcharset0 Helvetica;\f2\fnil\fcharset0 Menlo-Regular;
+}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red31\green31\blue31;\red239\green239\blue239;
+\red70\green137\blue204;\red23\green23\blue23;\red202\green202\blue202;\red140\green211\blue254;\red194\green126\blue101;
+}
+{\*\expandedcolortbl;;\csgray\c0;\cssrgb\c16078\c16078\c16078;\cssrgb\c94902\c94902\c94902;
+\cssrgb\c33725\c61176\c83922;\cssrgb\c11765\c11765\c11765;\cssrgb\c83137\c83137\c83137;\cssrgb\c61176\c86275\c99608;\cssrgb\c80784\c56863\c47059;
+}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\b\fs24 \cf0 Steps to install Hadoop on MacOS:\
+
+\f1\b0 \
+\
+1. install jdk \
+\
+2. Install vs code \
+ \
+	2.1 open vs code and press cmd + shift+p\
+		\
+		shell command install\
+\
+3. set JAVA_HOME path\
+\
+	
+\f2\fs22 \cf2 \CocoaLigature0 /Library/Java/JavaVirtualMachines/jdk-20.jdk/Contents/Home\
+	echo $JAVA_HOME\
+\
+4. Creating a security key for SSH Hadoop\
+\
+	
+\f1\fs32 \cf3 \cb4 \expnd0\expndtw0\kerning0
+\CocoaLigature1 ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa\
+\
+	cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys\
+\
+	chmod 0600 ~/.ssh/id_rsa.pub\
+	\
+	ssh localhost 
+\f2\fs22 \cf2 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+	\
+\
+5. Download Hadoop \
+	\
+	link: {\field{\*\fldinst{HYPERLINK "https://hadoop.apache.org/releases.html"}}{\fldrslt Download - Apache HadoopThe Apache Software Foundation!https://hadoop.apache.org \'9b releases\
+\
+\
+6. Copy Hadoop}} folder in Home directory\
+\
+7. Code .zprofile\
+\
+
+\fs28 	\cf3 \cb4 \expnd0\expndtw0\kerning0
+\CocoaLigature1 # Hadoop \cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf3 \cb4 export HADOOP_HOME=/Users/arjuncodes/hadoop-3.3.1/ \cb1 \
+\cb4 export HADOOP_INSTALL=$HADOOP_HOME \cb1 \
+\cb4 export HADOOP_MAPRED_HOME=$HADOOP_HOME \cb1 \
+\cb4 export HADOOP_COMMON_HOME=$HADOOP_HOME \cb1 \
+\cb4 export HADOOP_HDFS_HOME=$HADOOP_HOME export YARN_HOME=$HADOOP_HOME \cb1 \
+\cb4 export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native \cb1 \
+\cb4 export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin \cb1 \
+\cb4 export HADOOP_OPTS="-Djava.library.path=$HADOOP_HOME/lib/nativ"\
+\
+\
+8. 
+\fs22 \cf2 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 source ~/.zprofile\
+\
+9. sudo code $HADOOP_HOME/etc/hadoop/hadoop-env.sh\
+\
+	
+\fs24 \cf5 \cb6 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \outl0\strokewidth0 \strokec5 export\cf7 \strokec7  \cf8 \strokec8 JAVA_HOME\cf7 \strokec7 =\cf9 \strokec9 /Library/Java/JavaVirtualMachines/jdk-20.jdk/Contents/Home\cf7 \cb1 \strokec7 \
+\
+10. 
+\fs22 \cf2 \kerning1\expnd0\expndtw0 \CocoaLigature0 \outl0\strokewidth0 sudo code $HADOOP_HOME/etc/hadoop/core-site.xml\
+\
+\
+		
+\f1\fs32 \cf3 \cb4 \expnd0\expndtw0\kerning0
+\CocoaLigature1 <configuration>\cb1 \
+\cb4     <property>\cb1 \
+\cb4         <name>hadoop.tmp.dir</name>\cb1 \
+\cb4         <value>/Users/<YOUR_COMPUTER_NAME>/hdfs/tmp/</value>\cb1 \
+\cb4     </property>\cb1 \
+\cb4     <property>\cb1 \
+\cb4         <name>fs.default.name</name>\cb1 \
+\cb4         <value>hdfs://127.0.0.1:9000</value>\cb1 \
+\cb4     </property>\cb1 \
+\cb4 </configuration>
+\f2\fs22 \cf2 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+\
+\
+\
+11. 	sudo code $HADOOP_HOME/etc/hadoop/hdfs-site.xml\
+\
+	\
+	
+\f1\fs32 \cf3 \cb4 \expnd0\expndtw0\kerning0
+\CocoaLigature1 <configuration>\cb1 \
+\cb4   <property>\cb1 \
+\cb4       <name>dfs.data.dir</name>\cb1 \
+\cb4       <value>/Users/<YOUR_COMPUTER_NAME>/hdfs/namenode</value>\cb1 \
+\cb4   </property>\cb1 \
+\cb4   <property>\cb1 \
+\cb4       <name>dfs.data.dir</name>\cb1 \
+\cb4       <value>/Users/<YOUR_COMPUTER_NAME>/hdfs/datanode</value>\cb1 \
+\cb4   </property>\cb1 \
+\cb4   <property>\cb1 \
+\cb4       <name>dfs.replication</name>\cb1 \
+\cb4       <value>1</value>\cb1 \
+\cb4   </property>\cb1 \
+\cb4 </configuration>
+\f2\fs22 \cf2 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+\
+\
+12. sudo code $HADOOP_HOME/etc/hadoop/mapred-site.xml\
+\
+\
+	
+\f1\fs32 \cf3 \cb4 \expnd0\expndtw0\kerning0
+\CocoaLigature1 <configuration> \cb1 \
+\cb4   <property> \cb1 \
+\cb4     <name>mapreduce.framework.name</name> \cb1 \
+\cb4     <value>yarn</value> \cb1 \
+\cb4   </property> \cb1 \
+\cb4 </configuration>
+\f2\fs22 \cf2 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+		\
+\
+\
+13. sudo code $HADOOP_HOME/etc/hadoop/yarn-site.xml\
+\
+\
+		
+\f1\fs32 \cf3 \cb4 \expnd0\expndtw0\kerning0
+\CocoaLigature1 <configuration>\cb1 \
+\cb4   <property>\cb1 \
+\cb4     <name>yarn.nodemanager.aux-services</name>\cb1 \
+\cb4     <value>mapreduce_shuffle</value>\cb1 \
+\cb4   </property>\cb1 \
+\cb4   <property>\cb1 \
+\cb4     <name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>\cb1 \
+\cb4     <value>org.apache.hadoop.mapred.ShuffleHandler</value>\cb1 \
+\cb4   </property>\cb1 \
+\cb4   <property>\cb1 \
+\cb4     <name>yarn.resourcemanager.hostname</name>\cb1 \
+\cb4     <value>127.0.0.1</value>\cb1 \
+\cb4   </property>\cb1 \
+\cb4   <property>\cb1 \
+\cb4     <name>yarn.acl.enable</name>\cb1 \
+\cb4     <value>0</value>\cb1 \
+\cb4   </property>\cb1 \
+\cb4   <property>\cb1 \
+\cb4     <name>yarn.nodemanager.env-whitelist</name>   \cb1 \
+\cb4     <value>JAVA_HOME,HADOOP_COMMON_HOME,HADOOP_HDFS_HOME,HADOOP_CONF_DIR,CLASSPATH_PERPEND_DISTCACHE,HADOOP_YARN_HOME,HADOOP_MAPRED_HOME</value>\cb1 \
+\cb4   </property>\cb1 \
+\cb4 </configuration>
+\f2\fs22 \cf2 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 		\
+\
+\
+14. hadoop namenode -format\
+\
+16. Start-all.sh \
+\
+17. Jps \
+\
+18. Localhost:9870\
+\
+	if localhost:9870 not works try Creating a security key for SSH Hadoop and Hadoop namenode -format \
+\
+\
+\
+\
+FOR DETAILED STEPS AND VIDEO REFER FOLLOWING LINKS:\
+\
+	{\field{\*\fldinst{HYPERLINK "https://codewitharjun.medium.com/install-hadoop-on-macos-m1-m2-6f6a01820cc9"}}{\fldrslt https://codewitharjun.medium.com/install-hadoop-on-macos-m1-m2-6f6a01820cc9}}\
+\
+	{\field{\*\fldinst{HYPERLINK "https://www.youtube.com/watch?v=inDC9jgwpWY&t=508s"}}{\fldrslt https://www.youtube.com/watch?v=inDC9jgwpWY&t=508s}}}
