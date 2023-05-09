@@ -1,0 +1,371 @@
+hduser@student-ThinkCentre-M700:~$ hdfs dfs -mkdir /demo
+hdfs dfs -put '/home/hduser/input.txt' /demo
+ hdfs dfs -ls /demo
+
+
+
+
+Create table:
+
+hive> create table flight123(year INT,
+    >    month INT,
+    >    day INT,
+    >    day_of_week INT,
+    >    dep_time INT,
+    >    crs_dep_time INT,
+    >    arr_time INT,
+    >    crs_arr_time INT,
+    >    unique_carrier STRING,
+    >    flight_num INT,
+    >    tail_num STRING,
+    >    actual_elapsed_time INT,
+    >    crs_elapsed_time INT,
+    >    air_time INT,
+    >    arr_delay INT,
+    >    dep_delay INT,
+    >    origin STRING,
+    >    dest STRING,
+    >    distance INT,
+    >    taxi_in INT,
+    >    taxi_out INT,
+    >    cancelled INT,
+    >    cancellation_code STRING,
+    >    diverted INT,
+    >    carrier_delay STRING,
+    >    weather_delay STRING,
+    >    nas_delay STRING,
+    >    security_delay STRING,
+    >    late_aircraft_delay STRING
+    > );
+OK
+Time taken: 0.079 seconds
+
+
+Dropping table:
+
+hive> drop table flight123;
+OK
+Time taken: 0.265 seconds
+
+
+Alter table:
+
+hive> alter table abhidemo add columns (weight int);
+OK
+Time taken: 0.064 seconds
+hive> ALTER TABLE abhidemo RENAME TO abhidemo123;
+OK
+Time taken: 0.127 seconds
+hive> ALTER TABLE abhidemo123 RENAME TO abhidemo;
+OK
+Time taken: 0.064 seconds
+
+
+Creation of external Hive table:
+
+hive> create external table if not exists ex_table2(id int,name String)
+    > comment 'List of Students'
+    > row format delimited
+    > fields terminated by ','
+    > stored as textfile
+    > location '/demo';
+OK
+Time taken: 0.089 seconds
+
+
+hive> select * from ex_table2;
+OK
+1	abhinav|
+2	akash|
+Time taken: 0.13 seconds, Fetched: 2 row(s)
+
+
+
+Loading data into table:
+
+
+hive> LOAD DATA LOCAL INPATH '/home/hduser/flight_info.txt' INTO TABLE flight_data;
+Loading data to table default.flight_data
+OK
+Time taken: 0.939 seconds
+
+hive> desc flight_data;
+OK
+year                	int                 	                    
+month               	int                 	                    
+day                 	int                 	                    
+day_of_week         	int                 	                    
+dep_time            	int                 	                    
+crs_dep_time        	int                 	                    
+arr_time            	int                 	                    
+crs_arr_time        	int                 	                    
+unique_carrier      	string              	                    
+flight_num          	int                 	                    
+tail_num            	string              	                    
+actual_elapsed_time 	int                 	                    
+crs_elapsed_time    	int                 	                    
+air_time            	int                 	                    
+arr_delay           	int                 	                    
+dep_delay           	int                 	                    
+origin              	string              	                    
+dest                	string              	                    
+distance            	int                 	                    
+taxi_in             	int                 	                    
+taxi_out            	int                 	                    
+cancelled           	int                 	                    
+cancellation_code   	string              	                    
+diverted            	int                 	                    
+carrier_delay       	string              	                    
+weather_delay       	string              	                    
+nas_delay           	string              	                    
+security_delay      	string              	                    
+late_aircraft_delay 	string              	                    
+Time taken: 0.045 seconds, Fetched: 29 row(s)
+
+
+select * from flight_data;
+
+22	0		0	13	0	0	0	19
+2008	1	1	2	1950	1950	2016	2016	US	191	N303AW	86	86	47	0	0	PHX	SAN	304	237	0		0	NA	NA	NA	NA	NA
+2008	1	1	2	2305	2253	2322	2310	US	192	N633AW	77	77	58	12	12	PHX	SAN	304	316	0		0	NA	NA	NA	NA	NA
+2008	1	1	2	1530	1450	1531	1513	US	196	N302AW	61	83	47	18	40	PHX	SAN	304	311	0		0	11	0	0	0	7
+2008	1	1	2	1115	1105	1129	1124	US	1427	N751UW	74	79	48	5	10	PHX	SAN	304	521	0		0	NA	NA	NA	NA	NA
+2008	1	1	2	1854	1800	1906	1821	US	1509	N167US	72	81	54	45	54	PHX	SAN	304	216	0		0	8	0	0	0	37
+2008	1	1	2	2118	2115	2122	2136	US	1511	N192UW	64	81	48	-14	3	PHX	SAN	304	313	0		0	NA	NA	NA	NA	NA
+NULL	NULL	NULL	NULL	NULL	NULL	NULL	NULL	NULL	NULL	NULL	NULL	NULL	NULL	NULL	NULL	NULL	NULL	NULL	NULL	NULL	NULL	NULL	NULL	NULL	NULL	NULL	NULL	NULL
+Time taken: 0.16 seconds, Fetched: 257250 row(s)
+
+
+Join table:
+
+hive> create table stud_data(s_id int, s_name String, S_marks int )
+    > comment 'Student details'
+    > row format delimited
+    > fields terminated by ','
+    > stored as textfile
+    > ;
+OK
+Time taken: 0.064 seconds
+
+hive> desc stud_data;
+OK
+s_id                	int                 	                    
+s_name              	string              	                    
+s_marks             	int                 	                    
+Time taken: 0.04 seconds, Fetched: 3 row(s)
+
+hive> LOAD DATA LOCAL INPATH '/home/hduser/input.txt' INTO TABLE stud_data;
+Loading data to table default.stud_data
+OK
+Time taken: 0.288 seconds
+
+
+hive> select * from stud_data;
+OK
+1	abhinav	90
+2	akash	97
+Time taken: 0.1 seconds, Fetched: 5 row(s)
+
+hive> create table uni_data(stud_id int,s_fees int )
+    > row format delimited
+    > fields terminated by ','
+    > ;
+OK
+Time taken: 0.066 seconds
+
+hive> LOAD DATA LOCAL INPATH '/home/hduser/input2.txt' INTO TABLE uni_data;
+Loading data to table default.uni_data
+OK
+Time taken: 0.226 seconds
+
+hive> select * from uni_data;
+OK
+1	6000
+2	5000
+Time taken: 0.094 seconds, Fetched: 2 row(s)
+
+hive> select s_id ,s_name,s_fees from stud_data join uni_data on s_id=stud_id;
+WARNING: Hive-on-MR is deprecated in Hive 2 and may not be available in the future versions. Consider using a different execution engine (i.e. spark, tez) or using Hive 1.X releases.
+Query ID = hduser_20230509162320_9a57964b-2c49-4e28-8982-ad48a95b303e
+Total jobs = 1
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:/usr/local/hive/lib/log4j-slf4j-impl-2.6.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/usr/local/hadoop/share/hadoop/common/lib/slf4j-log4j12-1.7.25.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual binding is of type [org.apache.logging.slf4j.Log4jLoggerFactory]
+2023-05-09 16:23:25	Starting to launch local task to process map join;	maximum memory = 477626368
+2023-05-09 16:23:26	Dump the side-table for tag: 1 with group count: 2 into file: file:/tmp/hduser/021749a0-52de-449e-987f-8e009cb848ec/hive_2023-05-09_16-23-20_272_4549936591294054304-1/-local-10004/HashTable-Stage-3/MapJoin-mapfile01--.hashtable
+2023-05-09 16:23:26	Uploaded 1 File to: file:/tmp/hduser/021749a0-52de-449e-987f-8e009cb848ec/hive_2023-05-09_16-23-20_272_4549936591294054304-1/-local-10004/HashTable-Stage-3/MapJoin-mapfile01--.hashtable (304 bytes)
+2023-05-09 16:23:26	End of local task; Time Taken: 1.026 sec.
+Execution completed successfully
+MapredLocal task succeeded
+Launching Job 1 out of 1
+Number of reduce tasks is set to 0 since there's no reduce operator
+Starting Job = job_1683626146494_0001, Tracking URL = http://localhost:8088/proxy/application_1683626146494_0001/
+Kill Command = /usr/local/hadoop/bin/hadoop job  -kill job_1683626146494_0001
+Hadoop job information for Stage-3: number of mappers: 1; number of reducers: 0
+2023-05-09 16:23:35,989 Stage-3 map = 0%,  reduce = 0%
+2023-05-09 16:23:43,242 Stage-3 map = 100%,  reduce = 0%, Cumulative CPU 2.67 sec
+MapReduce Total cumulative CPU time: 2 seconds 670 msec
+Ended Job = job_1683626146494_0001
+MapReduce Jobs Launched: 
+Stage-Stage-3: Map: 1   Cumulative CPU: 2.67 sec   HDFS Read: 6389 HDFS Write: 139 SUCCESS
+Total MapReduce CPU Time Spent: 2 seconds 670 msec
+OK
+1	abhinav	6000
+2	akash	5000
+Time taken: 24.043 seconds, Fetched: 2 row(s)
+
+
+Creation of Index:
+
+hive> CREATE INDEX index1 on table xyz(name) 
+    > AS 'org.apache.hadoop.hive.ql.index.compact.CompactIndexHandler'
+    > ;
+FAILED: Execution Error, return code 1 from org.apache.hadoop.hive.ql.exec.DDLTask. java.lang.RuntimeException: Please specify deferred rebuild using " WITH DEFERRED REBUILD ".
+hive> CREATE INDEX index1 on table xyz(name) 
+    > AS 'org.apache.hadoop.hive.ql.index.compact.CompactIndexHandler'
+    > with DEFERRED REBUILD;
+OK
+Time taken: 0.192 seconds
+
+hive> select * from xyz;
+OK
+1	A
+2	B
+3	C
+4	D
+5	G
+Time taken: 0.096 seconds, Fetched: 5 row(s)
+
+hive> select * from index1;
+FAILED: SemanticException [Error 10001]: Line 1:14 Table not found 'index1'
+hive> SHOW INDEX ON xyz;
+OK
+index1              	xyz                 	name                	default__xyz_index1__	compact             	
+Time taken: 0.042 seconds, Fetched: 1 row(s)
+
+hive> CREATE INDEX index1 on table flight_data(flight_num) 
+    > AS 'org.apache.hadoop.hive.ql.index.compact.CompactIndexHandler'
+    > with DEFERRED REBUILD;
+OK
+Time taken: 0.111 seconds
+hive> SHOW INDEX ON flight_data;
+OK
+index1              	flight_data         	flight_num          	default__flight_data_index1__	compact             	
+Time taken: 0.029 seconds, Fetched: 1 row(s)
+
+Finding Average:
+
+hive> select avg(arr_delay) from flight_data;
+WARNING: Hive-on-MR is deprecated in Hive 2 and may not be available in the future versions. Consider using a different execution engine (i.e. spark, tez) or using Hive 1.X releases.
+Query ID = hduser_20230509164607_8701ead1-3cec-4d5f-99e6-b6c601b522d0
+Total jobs = 1
+Launching Job 1 out of 1
+Number of reduce tasks determined at compile time: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=<number>
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=<number>
+In order to set a constant number of reducers:
+  set mapreduce.job.reduces=<number>
+Starting Job = job_1683626146494_0003, Tracking URL = http://localhost:8088/proxy/application_1683626146494_0003/
+Kill Command = /usr/local/hadoop/bin/hadoop job  -kill job_1683626146494_0003
+Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 1
+2023-05-09 16:46:14,626 Stage-1 map = 0%,  reduce = 0%
+2023-05-09 16:46:19,752 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 2.96 sec
+2023-05-09 16:46:24,868 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 4.81 sec
+MapReduce Total cumulative CPU time: 4 seconds 810 msec
+Ended Job = job_1683626146494_0003
+MapReduce Jobs Launched: 
+Stage-Stage-1: Map: 1  Reduce: 1   Cumulative CPU: 4.81 sec   HDFS Read: 25126097 HDFS Write: 117 SUCCESS
+Total MapReduce CPU Time Spent: 4 seconds 810 msec
+OK
+11.48053997406133
+Time taken: 18.995 seconds, Fetched: 1 row(s)
+
+hive> select avg(dep_delay) from flight_data;
+WARNING: Hive-on-MR is deprecated in Hive 2 and may not be available in the future versions. Consider using a different execution engine (i.e. spark, tez) or using Hive 1.X releases.
+Query ID = hduser_20230509164715_32fdc247-85ff-403d-aa0d-12683a2ed225
+Total jobs = 1
+Launching Job 1 out of 1
+Number of reduce tasks determined at compile time: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=<number>
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=<number>
+In order to set a constant number of reducers:
+  set mapreduce.job.reduces=<number>
+Starting Job = job_1683626146494_0004, Tracking URL = http://localhost:8088/proxy/application_1683626146494_0004/
+Kill Command = /usr/local/hadoop/bin/hadoop job  -kill job_1683626146494_0004
+Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 1
+2023-05-09 16:47:22,163 Stage-1 map = 0%,  reduce = 0%
+2023-05-09 16:47:28,313 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 3.08 sec
+2023-05-09 16:47:33,477 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 4.99 sec
+MapReduce Total cumulative CPU time: 4 seconds 990 msec
+Ended Job = job_1683626146494_0004
+MapReduce Jobs Launched: 
+Stage-Stage-1: Map: 1  Reduce: 1   Cumulative CPU: 4.99 sec   HDFS Read: 25126109 HDFS Write: 118 SUCCESS
+Total MapReduce CPU Time Spent: 4 seconds 990 msec
+OK
+13.104479405790656
+Time taken: 19.008 seconds, Fetched: 1 row(s)
+
+
+Finding Sum:
+
+hive> select sum(arr_delay) from flight_data;
+WARNING: Hive-on-MR is deprecated in Hive 2 and may not be available in the future versions. Consider using a different execution engine (i.e. spark, tez) or using Hive 1.X releases.
+Query ID = hduser_20230509164836_cdcce38f-be3b-4966-8d63-89c923291f94
+Total jobs = 1
+Launching Job 1 out of 1
+Number of reduce tasks determined at compile time: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=<number>
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=<number>
+In order to set a constant number of reducers:
+  set mapreduce.job.reduces=<number>
+Starting Job = job_1683626146494_0005, Tracking URL = http://localhost:8088/proxy/application_1683626146494_0005/
+Kill Command = /usr/local/hadoop/bin/hadoop job  -kill job_1683626146494_0005
+Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 1
+2023-05-09 16:48:41,554 Stage-1 map = 0%,  reduce = 0%
+2023-05-09 16:48:47,720 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 2.91 sec
+2023-05-09 16:48:52,826 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 4.7 sec
+MapReduce Total cumulative CPU time: 4 seconds 700 msec
+Ended Job = job_1683626146494_0005
+MapReduce Jobs Launched: 
+Stage-Stage-1: Map: 1  Reduce: 1   Cumulative CPU: 4.7 sec   HDFS Read: 25125625 HDFS Write: 107 SUCCESS
+Total MapReduce CPU Time Spent: 4 seconds 700 msec
+OK
+2859217
+Time taken: 17.084 seconds, Fetched: 1 row(s)
+
+hive> select sum(dep_delay) from flight_data;
+WARNING: Hive-on-MR is deprecated in Hive 2 and may not be available in the future versions. Consider using a different execution engine (i.e. spark, tez) or using Hive 1.X releases.
+Query ID = hduser_20230509164905_01c97993-4bb3-4fc3-af87-6dba68120bca
+Total jobs = 1
+Launching Job 1 out of 1
+Number of reduce tasks determined at compile time: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=<number>
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=<number>
+In order to set a constant number of reducers:
+  set mapreduce.job.reduces=<number>
+Starting Job = job_1683626146494_0006, Tracking URL = http://localhost:8088/proxy/application_1683626146494_0006/
+Kill Command = /usr/local/hadoop/bin/hadoop job  -kill job_1683626146494_0006
+Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 1
+2023-05-09 16:49:11,355 Stage-1 map = 0%,  reduce = 0%
+2023-05-09 16:49:17,497 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 2.96 sec
+2023-05-09 16:49:22,608 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 4.8 sec
+MapReduce Total cumulative CPU time: 4 seconds 800 msec
+Ended Job = job_1683626146494_0006
+MapReduce Jobs Launched: 
+Stage-Stage-1: Map: 1  Reduce: 1   Cumulative CPU: 4.8 sec   HDFS Read: 25125637 HDFS Write: 107 SUCCESS
+Total MapReduce CPU Time Spent: 4 seconds 800 msec
+OK
+3270996
+Time taken: 18.122 seconds, Fetched: 1 row(s)
+
+
